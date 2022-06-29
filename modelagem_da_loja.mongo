@@ -1,0 +1,70 @@
+db.produtos.insertOne({
+    marca: "Apple", 
+    modelo: "Iphone 11",
+    descricao: "O celular mais novo",
+    sistema: "IOS 13",
+    memoria: "128GB",
+    chips: 1,
+    preco: NumberDecimal("4999.99")
+})
+
+
+db.clientes.insertOne({
+    nome: "Denes",
+    endereco: "av josé honório",
+    email: "denes@example.com",
+    senha: "denes123"
+})
+
+
+db.clientes.insertOne({
+    nome: "Ricardo",
+    endereco: "rua do ouvidor, 50",
+    email: "ricardo@example.com",
+    senha: "ricardo123"
+})
+
+
+db.produtos.update({
+    modelo: "Iphone 11"
+}, {
+    $set: {
+        quantidade: 7
+    }
+})
+
+
+db.clientes.updateMany({},{
+    $set: {
+        carrinho: {
+            produtos: []
+        }
+    }
+})
+
+
+var produto = db.produtos.findOneAndUpdate({
+    modelo: "Iphone 11",
+    quantidade: {
+        $gt: 0
+    }
+}, {
+    $inc:{
+        quantidade: -1
+    }
+}, {
+    projection: {
+        marca: 1,
+        modelo: 1,
+        preco: 1
+    }
+})
+
+
+db.clientes.update({
+    nome: "Denes"
+}, {
+    $push: {
+        "carrinho.produtos": produto
+    }
+})
